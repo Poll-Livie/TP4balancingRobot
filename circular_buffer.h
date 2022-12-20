@@ -9,6 +9,7 @@
 #define MESN_BALANCINGROBOT_CIRCULAR_BUFFER_H_
 
 #include "stdint.h"
+#include "cmsis_os.h"
 
 #define CIRC_BUFFER_ELMT_SIZE 100
 

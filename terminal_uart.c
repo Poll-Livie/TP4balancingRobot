@@ -7,7 +7,10 @@
 
 #include "terminal_uart.h"
 
+/* Private Variable --------------------------------------------------*/
 
+
+/* Public function definitions Variable ------------------------------*/
 term_Error_Status terminal(void){
 	term_mess_receivedTypeDef messReceived;
 	uint8_t i_termIndex=0;

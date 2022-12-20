@@ -38,6 +38,7 @@ typedef struct term_mess_receivedTypeDef{
 
 // circular_buf_t bufferIMU;
 
+
 /*
  * @brief : Basicaly this is the os task
  */
