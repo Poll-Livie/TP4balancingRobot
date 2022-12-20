@@ -11,10 +11,9 @@
 #include "cmsis_os.h"
 #include "stdio.h"
 #include "mesn_uart.h"
+#include "global_variable.h"
 
 #define TERM_BUFFER_SIZE 32
-#define CIRC_BUFFER_ELMT_SIZE 100
-
 
 /*
  *
@@ -37,33 +36,7 @@ typedef struct term_mess_receivedTypeDef{
 	term_cmd cmdReceived;
 }term_mess_receivedTypeDef;
 
-
-typedef struct circular_buf_t{
-	uint32_t buffer_vals[CIRC_BUFFER_ELMT_SIZE];
-	uint8_t writing_head;
-	uint8_t reading_head;
-	uint32_t buffer_size;
-}circular_buf_t;
-
-// initiates all values to 0,
-// and buffer_size to CIRC_BUFFER_ELMT_SIZE
-void circular_buf_init(circular_buf_t *circBuf);
-
-// read one value to the buffer
-// increments reading head
-uint32_t circular_buf_read_1(circular_buf_t *circBuf);
-
-/*
- * @brief : read all values from the buffer
- * 			increments reading head
- * @retval : returns a table of 100 vals
- */
-uint32_t* circular_buf_read_100(circular_buf_t *circBuf);
-
-// add one value to the buffer
-// increments writing head
-void circular_buf_write_1(circular_buf_t *circBuf, uint32_t valToAdd);
-
+// circular_buf_t bufferIMU;
 
 /*
  * @brief : Basicaly this is the os task

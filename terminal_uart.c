@@ -8,37 +8,6 @@
 #include "terminal_uart.h"
 
 
-void circular_buf_init(circular_buf_t *circBuf){
-	circBuf->buffer_size = CIRC_BUFFER_ELMT_SIZE;
-	circBuf->writing_head = 0;
-	circBuf->reading_head = 0;
-}
-
-uint32_t circular_buf_read_1(circular_buf_t *circBuf){
-	uint32_t retVal;
-	retVal = circBuf->buffer_vals[circBuf->reading_head++];
-	if (circBuf->reading_head > CIRC_BUFFER_ELMT_SIZE)
-			circBuf->reading_head = 0;
-	return retVal;
-}
-
-uint32_t* circular_buf_read_100(circular_buf_t *circBuf){
-	uint32_t retVal[CIRC_BUFFER_ELMT_SIZE];
-	uint32_t i ;
-	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; ++i) {
-		retVal[i]= circBuf->buffer_vals[circBuf->reading_head++];
-		if (circBuf->reading_head > CIRC_BUFFER_ELMT_SIZE)
-			circBuf->reading_head = 0;
-	}
-	return retVal;
-}
-
-void circular_buf_write_1(circular_buf_t *circBuf, uint32_t valToAdd){
-	circBuf->buffer_vals[circBuf->writing_head++] = valToAdd;
-	if (circBuf->writing_head > CIRC_BUFFER_ELMT_SIZE)
-		circBuf->writing_head = 0;
-}
-
 term_Error_Status terminal(void){
 	term_mess_receivedTypeDef messReceived;
 	uint8_t i_termIndex=0;
@@ -122,9 +91,9 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 
 void termCmdread(void){
 	// MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
-	uint8_t messToSend[8];
-	sprintf(messToSend,"%ld",circular_buf_read_1(&buffer_IMU));
-	// MESN_UART_PutString_Poll((uint8_t*)circular_buf_read_1(&buffer_IMU));
+	uint8_t messToSend[10];
+	sprintf(messToSend,"%d",circular_buf_read_1(&bufferIMU));
+	MESN_UART_PutString_Poll(messToSend);
 }
 
 void termCmddump(void){
