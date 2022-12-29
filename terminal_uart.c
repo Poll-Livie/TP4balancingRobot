@@ -8,7 +8,13 @@
 #include "terminal_uart.h"
 
 /* Private Variable --------------------------------------------------*/
+static osMessageQDef(streamQ, 1, uint32_t); // Define stream queue
+static osMessageQId streamQ_ID;
 
+void term_init(void){
+	/* Create RX queue between RX ISR and task */
+	streamQ_ID = osMessageCreate(osMessageQ(streamQ), NULL);
+}
 
 /* Public function definitions Variable ------------------------------*/
 term_Error_Status terminal(void){
@@ -104,7 +110,16 @@ void termCmddump(void){
 }
 
 void termCmdstream(void){
+	osEvent evt; // TODO maybe to put inside task ?
+	uint8_t messToSend[11];
+
 	MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
+	evt = osMessageGet(streamQ_ID, osWaitForever);
+
+	sprintf(messToSend,"%d\n",evt.value);
+	MESN_UART_PutString_Poll(messToSend);
+
+	// TODO ajouter osMessagePut() dans le système avec l'ISR sur l'IMU
 }
 
 void termCmdHelp(void){  // works

@@ -17,6 +17,7 @@ void circular_buf_init(circular_buf_t *circBuf){
 
 	/* Create mutex for protecting concurrency on uart Tx */
 	buffCirc100Sem = osMutexCreate(osMutex(buffCirc100Sem));
+
 }
 
 uint32_t circular_buf_read_1(circular_buf_t *circBuf){
