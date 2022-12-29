@@ -1,0 +1,65 @@
+\hypertarget{terminal__uart_8h_source}{}\doxysection{terminal\+\_\+uart.\+h}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * terminal\_uart.h}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *  Created on: 19 déc. 2022}}
+\DoxyCodeLine{5 \textcolor{comment}{ *      Author: paul\_leveque}}
+\DoxyCodeLine{6 \textcolor{comment}{ */}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#ifndef MESN\_BALANCINGROBOT\_TERMINAL\_UART\_H\_}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define MESN\_BALANCINGROBOT\_TERMINAL\_UART\_H\_}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}cmsis\_os.h"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}stdio.h"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}mesn\_uart.h"{}}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}global\_variable.h"{}}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#define TERM\_BUFFER\_SIZE 32}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{comment}{/*}}
+\DoxyCodeLine{19 \textcolor{comment}{ *}}
+\DoxyCodeLine{20 \textcolor{comment}{ */}}
+\DoxyCodeLine{21 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} term\_cmd \{}
+\DoxyCodeLine{22     home,}
+\DoxyCodeLine{23     read,}
+\DoxyCodeLine{24     dump,}
+\DoxyCodeLine{25     stream,}
+\DoxyCodeLine{26     help}
+\DoxyCodeLine{27 \}term\_cmd;}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} term\_Error\_Status \{}
+\DoxyCodeLine{30     term\_Error,}
+\DoxyCodeLine{31     term\_cmd\_ok}
+\DoxyCodeLine{32 \}term\_Error\_Status;}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structterm__mess__received_type_def}{term\_mess\_receivedTypeDef}}\{}
+\DoxyCodeLine{35     uint8\_t stringReceived[TERM\_BUFFER\_SIZE];       \textcolor{comment}{// character string received (written in terminal)}}
+\DoxyCodeLine{36     term\_cmd cmdReceived;}
+\DoxyCodeLine{37 \}\mbox{\hyperlink{structterm__mess__received_type_def}{term\_mess\_receivedTypeDef}};}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{comment}{// circular\_buf\_t bufferIMU;}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{comment}{/*}}
+\DoxyCodeLine{43 \textcolor{comment}{ * @brief : Basicaly this is the os task}}
+\DoxyCodeLine{44 \textcolor{comment}{ */}}
+\DoxyCodeLine{45 term\_Error\_Status terminal(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{comment}{/*}}
+\DoxyCodeLine{48 \textcolor{comment}{ * @brief : takes the incomming send values from uart, and translates it to the an term\_cmd}}
+\DoxyCodeLine{49 \textcolor{comment}{ */}}
+\DoxyCodeLine{50 term\_cmd commandAnalyser(\mbox{\hyperlink{structterm__mess__received_type_def}{term\_mess\_receivedTypeDef}} *messReceived);}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{keywordtype}{void} termCmdread(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keywordtype}{void} termCmddump(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \textcolor{keywordtype}{void} termCmdstream(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{keywordtype}{void} termCmdHelp(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* MESN\_BALANCINGROBOT\_TERMINAL\_UART\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

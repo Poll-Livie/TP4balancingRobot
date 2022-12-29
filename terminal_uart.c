@@ -101,7 +101,7 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 void termCmdread(void){
 	// MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
 	uint8_t messToSend[10];
-	sprintf(messToSend,"%d",circular_buf_read_1(&bufferIMU));
+	sprintf(messToSend,"%lu",circular_buf_read_1(&bufferIMU));
 	MESN_UART_PutString_Poll(messToSend);
 }
 

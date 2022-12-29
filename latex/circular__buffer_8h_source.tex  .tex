@@ -1,0 +1,49 @@
+\hypertarget{circular__buffer_8h_source}{}\doxysection{circular\+\_\+buffer.\+h}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * circular\_buffer.h}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *  Created on: 20 déc. 2022}}
+\DoxyCodeLine{5 \textcolor{comment}{ *      Author: paul\_leveque}}
+\DoxyCodeLine{6 \textcolor{comment}{ */}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#ifndef MESN\_BALANCINGROBOT\_CIRCULAR\_BUFFER\_H\_}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define MESN\_BALANCINGROBOT\_CIRCULAR\_BUFFER\_H\_}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}stdint.h"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}cmsis\_os.h"{}}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define CIRC\_BUFFER\_ELMT\_SIZE 100}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structcircular__buf__t}{circular\_buf\_t}}\{}
+\DoxyCodeLine{17     uint32\_t buffer\_vals[CIRC\_BUFFER\_ELMT\_SIZE];}
+\DoxyCodeLine{18     uint8\_t writing\_head;}
+\DoxyCodeLine{19     uint8\_t reading\_head;}
+\DoxyCodeLine{20     uint32\_t buffer\_size;}
+\DoxyCodeLine{21 \}\mbox{\hyperlink{structcircular__buf__t}{circular\_buf\_t}};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{comment}{// initiates all values to 0,}}
+\DoxyCodeLine{24 \textcolor{comment}{// and buffer\_size to CIRC\_BUFFER\_ELMT\_SIZE}}
+\DoxyCodeLine{25 \textcolor{keywordtype}{void} circular\_buf\_init(\mbox{\hyperlink{structcircular__buf__t}{circular\_buf\_t}} *circBuf);}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{comment}{// read one value to the buffer}}
+\DoxyCodeLine{28 \textcolor{comment}{// increments reading head}}
+\DoxyCodeLine{29 uint32\_t circular\_buf\_read\_1(\mbox{\hyperlink{structcircular__buf__t}{circular\_buf\_t}} *circBuf);}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{comment}{/*}}
+\DoxyCodeLine{32 \textcolor{comment}{ * @brief : read all values from the buffer}}
+\DoxyCodeLine{33 \textcolor{comment}{ *          increments reading head}}
+\DoxyCodeLine{34 \textcolor{comment}{ * @retval : returns a table of 100 vals}}
+\DoxyCodeLine{35 \textcolor{comment}{ */}}
+\DoxyCodeLine{36 uint32\_t* circular\_buf\_read\_100(\mbox{\hyperlink{structcircular__buf__t}{circular\_buf\_t}} *circBuf);}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{comment}{// add one value to the buffer}}
+\DoxyCodeLine{39 \textcolor{comment}{// increments writing head}}
+\DoxyCodeLine{40 \textcolor{keywordtype}{void} circular\_buf\_write\_1(\mbox{\hyperlink{structcircular__buf__t}{circular\_buf\_t}} *circBuf, uint32\_t valToAdd);}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* MESN\_BALANCINGROBOT\_CIRCULAR\_BUFFER\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}
