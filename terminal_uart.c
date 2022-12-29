@@ -36,8 +36,8 @@ term_Error_Status terminal(void){
 			MESN_UART_GetString(&inchar,10);
 		} while (inchar == '\0');
 		if (inchar == '\n') break;
-		else if (inchar == '\177') {
-			if (i_termIndex > 1) {
+		else if (inchar == '\177') {		// La je comprends pas ton \177 xD
+			if (i_termIndex > 1) {		// wtf xD 
 				i_termIndex--;
 			}
 		}
@@ -66,7 +66,9 @@ term_Error_Status terminal(void){
 			retVal = term_cmd_ok;
 			break;
 		default:
-			break;
+			break;		// Tu veux pas retourner term_Error dans defaults ? sinon tu renvois un truc pas initialisé si il y a une erreur
+					// j'ai l'impression, ou alors initialise le à term_Error
+					// A non ton default c'est ton home, du coup initialise le à term_Error dès le debut maybe
 	}
 	return retVal;
 }
@@ -93,8 +95,8 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 			return home;
 			break;
 	}
-	MESN_UART_PutString_Poll(messReceived->stringReceived);
-	MESN_UART_PutString_Poll((uint8_t*)" is not a command");
+	MESN_UART_PutString_Poll(messReceived->stringReceived);		// Il va jamais executer cette commande non ?
+	MESN_UART_PutString_Poll((uint8_t*)" is not a command");	//  il y les return au dessus et il y a un default qui va prendre toutes les possibilités
 	return home;
 }
 
