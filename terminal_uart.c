@@ -95,7 +95,7 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 			return home;
 			break;
 	}
-	MESN_UART_PutString_Poll(messReceived->stringReceived);		// Il va jamais executer cette commande non ?
+	MESN_UART_PutString_Poll(messReceived->stringReceived);		// TODO Il va jamais executer cette commande non ?
 	MESN_UART_PutString_Poll((uint8_t*)" is not a command");	//  il y les return au dessus et il y a un default qui va prendre toutes les possibilités
 	return home;
 }
