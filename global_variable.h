@@ -12,4 +12,10 @@
 
 extern circular_buf_t bufferIMU;
 
+/* Queue de message --------------------------------------------------*/
+extern osMessageQId MsgBox_Angle_Enregistrement;
+
+/* Mutex ------------------------------------------------------------*/
+extern osMutexId MutexMoteur;
+
 #endif /* MESN_BALANCINGROBOT_GLOBAL_VARIABLE_H_ */
