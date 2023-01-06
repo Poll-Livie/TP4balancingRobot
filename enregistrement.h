@@ -14,10 +14,46 @@
 
 typedef enum enr_Error_Status {
 	enr_Error,
-	enr_cmd_ok
+	enr_ok,
+	enr_wait,
+	enr_send,
+	enr_valueAbove25Degrees,
+	enr_valueUnder25Degrees
 }enr_Error_Status;
 
+/*
+ * @brief:  enable the waiting of the incomming data,
+ * 			should be awake when Q_angle has value and this task time
+ * @retVal: enr_Error_Status
+ */
+enr_Error_Status attenteData(void);
+
+
+/*
+ * @brief:
+ *
+ * @retVal: enr_Error_Status
+ */
 enr_Error_Status enregistrement(uint32_t IMU_Val);
+
+
+/*
+ * @brief:
+ *
+ * @retVal: enr_Error_Status
+ */
+enr_Error_Status envoiComStream(uint32_t IMU_Val);
+
+/*
+ * @brief:
+ *
+ * @retVal: enr_Error_Status
+ */
+enr_Error_Status verifAngle(uint32_t IMU_Val);
+
+
+
+
 
 
 #endif /* MESN_BALANCINGROBOT_ENREGISTREMENT_H_ */

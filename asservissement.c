@@ -8,7 +8,7 @@
 #include "asservissement.h"
 
 
-#define SIZE_QUEUE_ANGLE_ENREGISTREMENT 30 		// Dépend de la fréquence à laquelle nous appelons la tâche enregistrement
+
 
 /* Mutex ------------------------------------------------------------*/
 osMutexId MutexMoteur;
