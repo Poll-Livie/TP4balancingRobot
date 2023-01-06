@@ -7,14 +7,7 @@
 
 #include "asservissement.h"
 
-
 #define SIZE_QUEUE_ANGLE_ENREGISTREMENT 30 		// Dépend de la fréquence à laquelle nous appelons la tâche enregistrement
-
-/* Mutex ------------------------------------------------------------*/
-osMutexId MutexMoteur;
-
-/* Queue de message --------------------------------------------------*/
-osMessageQId MsgBox_Angle_Enregistrement;
 
 
 // A placer dans freeRTOS (Normal si il y a des erreurs)
@@ -23,7 +16,7 @@ osMessageQId MsgBox_Angle_Enregistrement;
 	*/
 /* Queues de messages --------------------------------------------------
 	osMessageQDef(MsgBox_Angle_Enregistrement, SIZE_QUEUE_ANGLE_ENREGISTREMENT, int32_t);
-	MsgBox_Angle_Enregistrement = osMessageCreate(osMessageQ(MsgBox_Angle_Enregistrement), NULL)
+	MsgBox_Angle_Enregistrement = osMessageCreate(osMessageQ(MsgBox_Angle_Enregistrement), NULL);
 
 	*/
 
