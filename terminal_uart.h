@@ -20,6 +20,7 @@
  */
 typedef enum term_cmd {
 	home,
+	error,
 	read,
 	dump,
 	stream,

@@ -36,8 +36,8 @@ term_Error_Status terminal(void){
 			MESN_UART_GetString(&inchar,10);
 		} while (inchar == '\0');
 		if (inchar == '\n') break;
-		else if (inchar == '\177') {		// La je comprends pas ton \177 xD
-			if (i_termIndex > 1) {		// wtf xD 
+		else if (inchar == '\177') {		// si on efface, le curseur du buffer circulaire ne s'incrémente pas
+			if (i_termIndex > 1) {		// et si on efface quand il n'y a rien on ne fait rien
 				i_termIndex--;
 			}
 		}
@@ -66,38 +66,38 @@ term_Error_Status terminal(void){
 			retVal = term_cmd_ok;
 			break;
 		default:
-			break;		// Tu veux pas retourner term_Error dans defaults ? sinon tu renvois un truc pas initialisé si il y a une erreur
-					// j'ai l'impression, ou alors initialise le à term_Error
-					// A non ton default c'est ton home, du coup initialise le à term_Error dès le debut maybe
+			retVal = term_Error;
+			break;
 	}
 	return retVal;
 }
 
 term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 	// uint8_t messToSend[32];	// messaging buffer
-
+	term_cmd retVal = error;
 	// TODO make sure to check the whole word, not just the fisrt letter
 	switch (messReceived->stringReceived[1]) {
-		case 'r'
-		:
-			return read;
+		case 'r':
+			retVal =  read;
 			break;
 		case 'd':
-			return dump;
+			retVal =  dump;
 			break;
 		case 's':
-			return stream;
+			retVal =  stream;
 			break;
 		case 'h':
-			return help;
+			retVal =  help;
 			break;
 		default:
-			return home;
+			retVal =  error;
 			break;
 	}
-	MESN_UART_PutString_Poll(messReceived->stringReceived);		// TODO Il va jamais executer cette commande non ?
-	MESN_UART_PutString_Poll((uint8_t*)" is not a command");	//  il y les return au dessus et il y a un default qui va prendre toutes les possibilités
-	return home;
+	if (retVal == error) {
+		MESN_UART_PutString_Poll(messReceived->stringReceived);		// TODO Il va jamais executer cette commande non ?
+		MESN_UART_PutString_Poll((uint8_t*)" is not a command");	//  il y les return au dessus et il y a un default qui va prendre toutes les possibilités
+	}
+	return retVal;
 }
 
 void termCmdread(void){
