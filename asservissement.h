@@ -13,6 +13,8 @@
 #include "lsm6ds3.h"
 #include "libSBR_autom_obs-corr.h"
 #include "MotorDriver.h"
+#include "global_variable.h"
+
 
 #define SIZE_QUEUE_ANGLE_ENREGISTREMENT 30 		// Dépend de la fréquence à laquelle nous appelons la tâche enregistrement
 
@@ -22,6 +24,7 @@ typedef enum asser_Error_Status {
 	asser_Error,
 	asser_ok
 }asser_Error_Status;
+
 
 // Function prototype
 
