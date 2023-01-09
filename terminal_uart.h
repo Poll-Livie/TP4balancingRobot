@@ -12,6 +12,7 @@
 #include "stdio.h"
 #include "mesn_uart.h"
 #include "global_variable.h"
+#include "circular_buffer.h"
 
 #define TERM_BUFFER_SIZE 32
 

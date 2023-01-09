@@ -20,8 +20,8 @@ void circular_buf_init(circular_buf_t *circBuf){
 
 }
 
-uint32_t circular_buf_read_1(circular_buf_t *circBuf){
-	uint32_t retVal;
+int32_t circular_buf_read_1(circular_buf_t *circBuf){
+	int32_t retVal;
 
 	osMutexWait(buffCirc100Sem, osWaitForever);
 	retVal = circBuf->buffer_vals[circBuf->reading_head++];
@@ -31,9 +31,9 @@ uint32_t circular_buf_read_1(circular_buf_t *circBuf){
 	return retVal;
 }
 
-uint32_t* circular_buf_read_100(circular_buf_t *circBuf){
-	uint32_t retVal[CIRC_BUFFER_ELMT_SIZE];
-	uint32_t i ;
+int32_t* circular_buf_read_100(circular_buf_t *circBuf){
+	int32_t retVal[CIRC_BUFFER_ELMT_SIZE];
+	uint32_t i;
 	osMutexWait(buffCirc100Sem, osWaitForever);
 	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; ++i) {
 		retVal[i]= circBuf->buffer_vals[circBuf->reading_head++];
@@ -44,7 +44,7 @@ uint32_t* circular_buf_read_100(circular_buf_t *circBuf){
 	return retVal;
 }
 
-void circular_buf_write_1(circular_buf_t *circBuf, uint32_t valToAdd){
+void circular_buf_write_1(circular_buf_t *circBuf, int32_t valToAdd){
 	osMutexWait(buffCirc100Sem, osWaitForever);
 	circBuf->buffer_vals[circBuf->writing_head++] = valToAdd;
 	if (circBuf->writing_head > CIRC_BUFFER_ELMT_SIZE)

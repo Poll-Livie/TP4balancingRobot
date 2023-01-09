@@ -8,12 +8,12 @@
 #include "terminal_uart.h"
 
 /* Private Variable --------------------------------------------------*/
-static osMessageQDef(streamQ, 1, uint32_t); // Define stream queue
-static osMessageQId streamQ_ID;
+//static osMessageQDef(streamQ, 1, uint32_t); // Define stream queue
+//static osMessageQId streamQ_ID;
 
-void term_init(void){
+void term_init(void){								// potentiellement pas utile
 	/* Create RX queue between RX ISR and task */
-	streamQ_ID = osMessageCreate(osMessageQ(streamQ), NULL);
+	//streamQ_ID = osMessageCreate(osMessageQ(streamQ), NULL);
 }
 
 /* Public function definitions Variable ------------------------------*/
@@ -84,7 +84,7 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 			retVal =  dump;
 			break;
 		case 's':
-			retVal =  stream;
+			retVal =  stream;		// Ajouter variables pour arrêter ou lancer le stream
 			break;
 		case 'h':
 			retVal =  help;
@@ -94,8 +94,8 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 			break;
 	}
 	if (retVal == error) {
-		MESN_UART_PutString_Poll(messReceived->stringReceived);		// TODO Il va jamais executer cette commande non ?
-		MESN_UART_PutString_Poll((uint8_t*)" is not a command");	//  il y les return au dessus et il y a un default qui va prendre toutes les possibilités
+		MESN_UART_PutString_Poll(messReceived->stringReceived);
+		MESN_UART_PutString_Poll((uint8_t*)" is not a command");
 	}
 	return retVal;
 }
@@ -108,20 +108,27 @@ void termCmdread(void){
 }
 
 void termCmddump(void){
-	MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
+	int32_t* tab_read;
+	uint8_t messToSend[100];
+	int32_t i=0;
+	tab_read=circular_buf_read_100(&bufferIMU);
+	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; ++i) {
+		sprintf(messToSend,"%ld\n",tab_read[i]);
+		MESN_UART_PutString_Poll(messToSend);
+	}
 }
 
 void termCmdstream(void){
 	osEvent evt; // TODO maybe to put inside task ?
-	uint8_t messToSend[11];
+	uint8_t messToSend[100];
 
-	MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
-	evt = osMessageGet(streamQ_ID, osWaitForever);
+	// A mettre dans une boucle infinie
 
-	sprintf(messToSend,"%d\n",evt.value);
+	evt = osMessageGet(MsgBox_Stream, osWaitForever);
+
+	sprintf(messToSend,"%ld\n",evt.value.signals);
 	MESN_UART_PutString_Poll(messToSend);
 
-	// TODO ajouter osMessagePut() dans le système avec l'ISR sur l'IMU
 }
 
 void termCmdHelp(void){  // works
