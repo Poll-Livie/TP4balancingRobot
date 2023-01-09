@@ -14,6 +14,7 @@ extern circular_buf_t bufferIMU;
 
 /* Queue de message --------------------------------------------------*/
 extern osMessageQId MsgBox_Angle_Enregistrement;
+extern osMessageQId MsgBox_Stream;
 
 /* Mutex ------------------------------------------------------------*/
 extern osMutexId MutexMoteur;
