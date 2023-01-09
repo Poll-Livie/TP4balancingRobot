@@ -35,7 +35,8 @@ void verifAngle(int32_t IMU_Val){
 	// if IMU val > 25° LED ON
 	if (IMU_Val > 25000 || IMU_Val < -25000) {
 		retVal = enr_valueAbove25Degrees;
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+		counter = 0;
 	}
 	// Else LED OFF
 	else {
@@ -47,10 +48,13 @@ void verifAngle(int32_t IMU_Val){
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 			counter = 0;
 		}
+		else{
+			counter = 0;
+		}
 	}
 	counter++;
 	// return retVal;
-	osDelay(10);
+
 }
 
 
