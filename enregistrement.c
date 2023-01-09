@@ -41,14 +41,11 @@ void verifAngle(int32_t IMU_Val){
 	// Else LED OFF
 	else {
 		retVal = enr_valueUnder25Degrees;
-		if (counter >= 0 && counter < 90) {
+		if (counter >= 0 && counter < 9) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 		}
-		else if (counter < 100) {
+		else if (counter < 10) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-			counter = 0;
-		}
-		else{
 			counter = 0;
 		}
 	}
