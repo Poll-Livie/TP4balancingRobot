@@ -8,9 +8,10 @@
 #ifndef MESN_BALANCINGROBOT_ENREGISTREMENT_H_
 #define MESN_BALANCINGROBOT_ENREGISTREMENT_H_
 
-
+#include "gpio.h"
 #include "global_variable.h"
 #include "circular_buffer.h"
+#include "asservissement.h" // test avec l'angle
 
 typedef enum enr_Error_Status {
 	enr_Error,
@@ -44,7 +45,7 @@ enr_Error_Status envoiComStream(int32_t IMU_Val);
  *
  * @retVal: enr_Error_Status
  */
-enr_Error_Status verifAngle(int32_t IMU_Val);
+void verifAngle(int32_t IMU_Val);
 
 
 
