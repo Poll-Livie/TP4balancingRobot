@@ -22,20 +22,15 @@ typedef enum enr_Error_Status {
 	enr_valueUnder25Degrees
 }enr_Error_Status;
 
-/*
- * @brief:  enable the waiting of the incomming data,
- * 			should be awake when Q_angle has value and this task time
- * @retVal: enr_Error_Status
- */
-enr_Error_Status attenteData(void);
 
+void enregistrement_init();
 
 /*
  * @brief:
  *
  * @retVal: enr_Error_Status
  */
-enr_Error_Status enregistrement(int32_t IMU_Val);
+enr_Error_Status enregistrement();
 
 
 /*

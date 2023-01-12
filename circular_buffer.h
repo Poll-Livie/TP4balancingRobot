@@ -14,7 +14,7 @@
 #define CIRC_BUFFER_ELMT_SIZE 100
 
 typedef struct circular_buf_t{
-	uint32_t buffer_vals[CIRC_BUFFER_ELMT_SIZE];
+	int32_t buffer_vals[CIRC_BUFFER_ELMT_SIZE];
 	uint8_t writing_head;
 	uint8_t reading_head;
 	uint32_t buffer_size;
@@ -26,18 +26,18 @@ void circular_buf_init(circular_buf_t *circBuf);
 
 // read one value to the buffer
 // increments reading head
-uint32_t circular_buf_read_1(circular_buf_t *circBuf);
+int32_t circular_buf_read_1(circular_buf_t *circBuf);
 
 /*
  * @brief : read all values from the buffer
  * 			increments reading head
  * @retval : returns a table of 100 vals
  */
-uint32_t* circular_buf_read_100(circular_buf_t *circBuf);
+int32_t* circular_buf_read_100(circular_buf_t *circBuf);
 
 // add one value to the buffer
 // increments writing head
-void circular_buf_write_1(circular_buf_t *circBuf, uint32_t valToAdd);
+void circular_buf_write_1(circular_buf_t *circBuf, int32_t valToAdd);
 
 
 

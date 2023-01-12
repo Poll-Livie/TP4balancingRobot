@@ -8,23 +8,12 @@
 #include "asservissement.h"
 
 
-// A placer dans freeRTOS (Normal si il y a des erreurs)
-/* Mutex ------------------------------------------------------------
-	osMutexCreate(MutexMoteur);
-	*/
-/* Queues de messages --------------------------------------------------
-	osMessageQDef(MsgBox_Angle_Enregistrement, SIZE_QUEUE_ANGLE_ENREGISTREMENT, int32_t);
-	MsgBox_Angle_Enregistrement = osMessageCreate(osMessageQ(MsgBox_Angle_Enregistrement), NULL);
-
-	*/
-
-// Fin A placer dans freeRTOS
 
 // Avant utilisation, bien initialiser le moteur et l'IMU
 
 asser_Error_Status asservissement_moteur(){
 
-	// ATTENTION les variables sont des entiers SIGNES
+	// ATTENTION les variables sont des entiers NON-SIGNES
 
 	asser_Error_Status retVal = asser_ok;
 
@@ -49,9 +38,9 @@ asser_Error_Status asservissement_moteur(){
 	commandeAEnvoyer = autoAlgo_commandLaw(angleObs, rotAng_mDegSec);
 
 	// Envoi de commandeAEnvoyer au moteur et prends MutexMoteur
-	osMutexWait(MutexMoteur,0);
+	osMutexWait(MutexMoteur_ID,0);
 	MotorDriver_Move(commandeAEnvoyer);
-	osMutexRelease(MutexMoteur);
+	osMutexRelease(MutexMoteur_ID);
 
 	// Envoi de angleObs dans la queue pour enregistrement
 	osMessagePut(MsgBox_Angle_Enregistrement,angleObs,10);		// Timeout de 10 millisec
