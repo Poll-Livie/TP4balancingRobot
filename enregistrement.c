@@ -42,6 +42,7 @@ enr_Error_Status envoiComStream(int32_t IMU_Val){
 }
 
 void verifAngle(int32_t IMU_Val){
+
 	enr_Error_Status retVal = enr_Error;
 	static uint32_t counter = 0;
 	int32_t angleObs = 0;
