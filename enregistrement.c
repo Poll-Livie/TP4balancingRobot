@@ -22,16 +22,16 @@ enr_Error_Status enregistrement(){
 	evt = osMessageGet(MsgBox_Angle_Enregistrement, 0);
 	if(evt.status == osEventMessage){
 		angle=evt.value.signals;
+		// Ecriture de l'angle dans le buffer
+		circular_buf_write_1(&bufferIMU,angle);
+
+		// Envoi Stream
+		envoiComStream(angle);
+
+		verifAngle(angle);
+		// at this point everything worked
+		retVal = enr_ok;
 	}								// Fonctionnement queue vérifié
-
-	// Ecriture de l'angle dans le buffer
-	circular_buf_write_1(&bufferIMU,angle);
-
-	// Envoi Stream
-	envoiComStream(angle);
-
-	verifAngle(angle);
-
 	return retVal;
 }
 
