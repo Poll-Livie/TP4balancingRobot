@@ -122,29 +122,6 @@ void vApplicationMallocFailedHook(void)
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
-
-	uint8_t LSM6DS3_Res = 0;
-	uint8_t tempString[100];
-
-	// initialisation du buffer circulaire des 100 vals à 0;
-	MotorDriver_Init();
-	MESN_UART_Init();
-	enregistrement_init();
-
-	if(LSM6DS3_begin(&LSM6DS3_Res) != IMU_SUCCESS){
-		MESN_UART_PutString_Poll((uint8_t*)"\r\nIMU Error !");
-		while(1);
-	}
-
-	/* Test des periphs externes */
-	sprintf((char*)tempString, "\r\nInit done. LSM6DS3 reg = %02x", LSM6DS3_Res);
-	MESN_UART_PutString_Poll(tempString);
-	MotorDriver_Move(200);
-
-	/* Test algo autom */
-	sprintf((char*)tempString, "\r\nAngle = %ldmDeg", autoAlgo_angleObs(50,5));
-	MESN_UART_PutString_Poll(tempString);
-
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -171,8 +148,10 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
+
   // osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
   // defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
 	osThreadDef(ASSERVISSEMENT, asservissementTask, osPriorityHigh, 0, 256);
 	asservissementTaskHandle = osThreadCreate(osThread(ASSERVISSEMENT), NULL);
 
@@ -243,6 +222,27 @@ void StartDefaultTask(void const * argument)
 
 void asservissementTask(void const * argument){
 	uint32_t tick =0;
+	uint8_t LSM6DS3_Res = 0;
+	uint8_t tempString[100];
+
+	// initialisation du buffer circulaire des 100 vals à 0;
+	MotorDriver_Init();
+	MESN_UART_Init();
+	enregistrement_init();
+
+	if(LSM6DS3_begin(&LSM6DS3_Res) != IMU_SUCCESS){
+		MESN_UART_PutString_Poll((uint8_t*)"\r\nIMU Error !");
+		while(1);
+	}
+
+	/* Test des periphs externes */
+	sprintf((char*)tempString, "\r\nInit done. LSM6DS3 reg = %02x", LSM6DS3_Res);
+	MESN_UART_PutString_Poll(tempString);
+	MotorDriver_Move(200);
+
+	/* Test algo autom */
+	sprintf((char*)tempString, "\r\nAngle = %ldmDeg", autoAlgo_angleObs(50,5));
+	MESN_UART_PutString_Poll(tempString);
 	tick = osKernelSysTick();
 	while(1){
 
@@ -264,7 +264,6 @@ void enregistrementTask(void const * argument){
 
 		if (enregistrement()==enr_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur enregistrement");
-
 		}
 		osDelayUntil(&tick, 10);
 	}
@@ -278,9 +277,6 @@ void terminalTask(void const * argument){
 
 		if (terminal()==term_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur terminal");
-		}
-		else {
-
 		}
 		osDelayUntil(&tick, 100);
 	}

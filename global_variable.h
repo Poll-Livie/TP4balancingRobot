@@ -19,4 +19,6 @@ extern osMessageQId MsgBox_Stream;
 /* Mutex ------------------------------------------------------------*/
 extern osMutexId MutexMoteur_ID;
 
+/* variables --------------------------------------------------------*/
+
 #endif /* MESN_BALANCINGROBOT_GLOBAL_VARIABLE_H_ */

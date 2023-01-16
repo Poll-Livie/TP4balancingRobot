@@ -22,6 +22,7 @@ term_Error_Status terminal(void){
 	uint8_t i_termIndex=0;
 	uint8_t inchar = 0;
 	term_Error_Status retVal;
+	uint8_t streamToggleFlag=0;
 
 	// Basicaly this is the os task
 	MESN_UART_PutString_Poll((uint8_t*)"\r\nbalancing robot terminal :~$ ");
@@ -58,7 +59,8 @@ term_Error_Status terminal(void){
 			retVal = term_cmd_ok;
 			break;
 		case stream:
-			termCmdstream();
+			streamToggleFlag = !streamToggleFlag;
+			termCmdstream(streamToggleFlag);
 			retVal = term_cmd_ok;
 			break;
 		case help:
@@ -102,33 +104,38 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 
 void termCmdread(void){
 	// MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
-	uint8_t messToSend[10];
-	sprintf(messToSend,"%ld",circular_buf_read_1(&bufferIMU));
+	uint8_t messToSend[20];
+	sprintf(messToSend,(uint8_t*)"%ld",circular_buf_read_1(&bufferIMU));
 	MESN_UART_PutString_Poll(messToSend);
 }
 
 void termCmddump(void){
-	int32_t* tab_read;
-	uint8_t messToSend[100];
-	int32_t i=0;
+	int32_t *tab_read;
+	uint8_t messToSend[20];
+	int32_t i=0,j=0;
 	tab_read=circular_buf_read_100(&bufferIMU);
-	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; ++i) {
-		sprintf(messToSend,"%ld\n",tab_read[i]);
-		MESN_UART_PutString_Poll(messToSend);
+
+	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE/10; ++i) {
+		for (j = 0; j < CIRC_BUFFER_ELMT_SIZE/10; ++j) {
+			sprintf(messToSend,(uint8_t*)"%10ld ",tab_read[i*10+j]);
+			MESN_UART_PutString_Poll(messToSend);
+		}
+		MESN_UART_PutString_Poll((uint8_t*)"\n\r");
 	}
 }
 
-void termCmdstream(void){
+void termCmdstream(uint8_t streamToggle){
 	osEvent evt; // TODO maybe to put inside task ?
 	uint8_t messToSend[100];
 
 	// A mettre dans une boucle infinie
 
-	evt = osMessageGet(MsgBox_Stream, osWaitForever);
+	while (streamToggle != 0 ){
+		evt = osMessageGet(MsgBox_Stream, 100);
 
-	sprintf(messToSend,"%ld\n",evt.value.signals);
-	MESN_UART_PutString_Poll(messToSend);
-
+		sprintf(messToSend,(uint8_t*)"%ld\n\r",evt.value.signals);
+		MESN_UART_PutString_Poll(messToSend);
+	}
 }
 
 void termCmdHelp(void){  // works
