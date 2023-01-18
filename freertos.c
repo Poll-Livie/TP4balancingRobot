@@ -278,7 +278,7 @@ void terminalTask(void const * argument){
 		if (terminal()==term_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur terminal");
 		}
-		osDelayUntil(&tick, 100);
+		osDelayUntil(&tick, 1);
 	}
 }
 

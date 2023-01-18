@@ -11,6 +11,8 @@
 //static osMessageQDef(streamQ, 1, uint32_t); // Define stream queue
 //static osMessageQId streamQ_ID;
 
+uint8_t streamToggleFlag=0;
+
 void term_init(void){								// potentiellement pas utile
 	/* Create RX queue between RX ISR and task */
 	//streamQ_ID = osMessageCreate(osMessageQ(streamQ), NULL);
@@ -22,7 +24,7 @@ term_Error_Status terminal(void){
 	uint8_t i_termIndex=0;
 	uint8_t inchar = 0;
 	term_Error_Status retVal;
-	uint8_t streamToggleFlag=0;
+
 
 	// Basicaly this is the os task
 	MESN_UART_PutString_Poll((uint8_t*)"\r\nbalancing robot terminal :~$ ");
@@ -127,12 +129,17 @@ void termCmddump(void){
 void termCmdstream(uint8_t streamToggle){
 	osEvent evt; // TODO maybe to put inside task ?
 	uint8_t messToSend[100];
+	uint8_t stopChar[2];
 
 	// A mettre dans une boucle infinie
 
 	while (streamToggle != 0 ){
-		evt = osMessageGet(MsgBox_Stream, 100);
-
+		evt = osMessageGet(MsgBox_Stream, 1);
+		MESN_UART_GetString(stopChar, 200);
+		if (stopChar[0] == 's' || stopChar[0] == 'q') {
+			streamToggle = !streamToggle;
+			break;
+		}
 		sprintf(messToSend,(uint8_t*)"%ld\n\r",evt.value.signals);
 		MESN_UART_PutString_Poll(messToSend);
 	}
