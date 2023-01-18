@@ -154,9 +154,9 @@ void termCmdHelp(void){  // works
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne les 100 dernières valeurs mesurées (en milli-Degrés) \n");
 
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t -> stream :");
-	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne en continu, toutes les 10 ms, la dernière valeur mesurée (en milli-Degrés) \n \
-		en effaçant côté terminal la précédente valeur affichée. La sortie du mode stream \n	\
-		s’affectue en appuyant sur la touche <enter> côté terminal \n");
+	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne en continu, toutes les 10 ms, la dernière valeur mesurée (en milli-Degrés) \n\r \
+		en effaçant côté terminal la précédente valeur affichée. La sortie du mode stream \n\r	\
+		s’affectue en appuyant sur la touche <enter> côté terminal \n\r ");
 
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t -> help :");
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne la liste des commandes supportées par l’application et leur descriptions \n");
