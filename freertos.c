@@ -265,7 +265,7 @@ void enregistrementTask(void const * argument){
 		if (enregistrement()==enr_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur enregistrement");
 		}
-		osDelayUntil(&tick, 10);
+		//osDelayUntil(&tick, 10);
 	}
 }
 
@@ -278,7 +278,7 @@ void terminalTask(void const * argument){
 		if (terminal()==term_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur terminal");
 		}
-		osDelayUntil(&tick, 1);
+		//osDelayUntil(&tick, 1);
 	}
 }
 

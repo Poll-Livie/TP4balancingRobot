@@ -19,7 +19,7 @@ enr_Error_Status enregistrement(){
 	osEvent evt;
 	int32_t angle;
 
-	evt = osMessageGet(MsgBox_Angle_Enregistrement, 0);
+	evt = osMessageGet(MsgBox_Angle_Enregistrement, osWaitForever);
 	if(evt.status == osEventMessage){
 		angle=evt.value.signals;
 		// Ecriture de l'angle dans le buffer
@@ -57,10 +57,10 @@ void verifAngle(int32_t IMU_Val){
 	// Else LED OFF
 	else {
 		retVal = enr_valueUnder25Degrees;
-		if (counter >= 0 && counter < 9) {
+		if (counter >= 0 && counter < 90) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 		}
-		else if (counter < 10) {
+		else if (counter < 100) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 			counter = 0;
 		}

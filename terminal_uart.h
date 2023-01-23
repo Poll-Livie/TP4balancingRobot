@@ -55,7 +55,7 @@ void termCmdread(void);
 
 void termCmddump(void);
 
-void termCmdstream(uint8_t streamToggle);
+void termCmdstream(void);
 
 void termCmdHelp(void);
 
