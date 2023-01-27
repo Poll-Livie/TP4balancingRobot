@@ -8,19 +8,18 @@
 #include "asservissement.h"
 
 
-
 // Avant utilisation, bien initialiser le moteur et l'IMU
 
 /**
   * @brief  Asservissement du moteur : calcul de l'angle observé et calcul de la commande à envoyer
   * @param  None
-  * @retval asser_Error_Status
+  * @retval MeSN_StatusTypedef
   */
-asser_Error_Status asservissement_moteur(){
+MeSN_StatusTypedef asservissement_moteur(){
 
 	// ATTENTION les variables sont des entiers NON-SIGNES
 
-	asser_Error_Status retVal = asser_ok;
+	MeSN_StatusTypedef retVal = USER_OK;
 
 	int32_t angleObs;					//milli-deg -> angle entre l'axe du robot et l'axe vetical
 	int32_t acc_mg;						//milli-g
@@ -31,10 +30,10 @@ asser_Error_Status asservissement_moteur(){
 	// Récupération des valeurs de acc_mg, rotAng_mDegSec et angleObs
 	// et Mutex I2C déjà implémenté dans la librairie
 	if(LSM6DS3_readMgAccelX(&acc_mg) != IMU_SUCCESS){	// Sur l'axe X
-		retVal = asser_Error;
+		retVal = USER_ERROR;
 	}
 	if(LSM6DS3_readMdpsGyroY(&rotAng_mDegSec) != IMU_SUCCESS){	// Sur l'axe Y
-		retVal = asser_Error;
+		retVal = USER_ERROR;
 	}
 
 	// Calcul l'angle de différence en milli-degrés

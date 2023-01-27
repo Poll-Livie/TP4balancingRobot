@@ -12,13 +12,7 @@
 #include "global_variable.h"
 #include "circular_buffer.h"
 #include "asservissement.h" // test avec l'angle
-
-typedef enum enr_Error_Status {
-	enr_Error,
-	enr_ok,
-	enr_wait,
-	enr_send
-}enr_Error_Status;
+#include "errorStatus.h"
 
 
 void enregistrement_init();
@@ -28,7 +22,7 @@ void enregistrement_init();
  *
  * @retVal: enr_Error_Status
  */
-enr_Error_Status enregistrement();
+MeSN_StatusTypedef enregistrement();
 
 
 /*
@@ -36,7 +30,7 @@ enr_Error_Status enregistrement();
  *
  * @retVal: enr_Error_Status
  */
-enr_Error_Status envoiComStream(int32_t IMU_Val);
+MeSN_StatusTypedef envoiComStream(int32_t IMU_Val);
 
 /*
  * @brief:
