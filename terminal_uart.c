@@ -117,6 +117,7 @@ void termCmdread(void){
 
 /**
  * @brief : Fonction pour lire les 100 dernière valeurs du buffer circulaire, et les afficher sur le terminal sous forme de tableau
+ * Nous affichons les valeurs les plus anciennes jusqu'au plus récentes dans le tableau.
  * @param : None
  * @retval : None
  */
