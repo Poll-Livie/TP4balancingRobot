@@ -10,6 +10,11 @@
 static osMutexId buffCirc100Sem; 	// Mutex ID
 static osMutexDef(buffCirc100Sem); 	// Mutex definition
 
+/**
+  * @brief  Initialisation du buffer circulaire
+  * @param  circular_buf_t* : le pointeur vers le buffer circulaire
+  * @retval None
+  */
 void circular_buf_init(circular_buf_t *circBuf){
 	circBuf->buffer_size = CIRC_BUFFER_ELMT_SIZE;
 	circBuf->writing_head = 0;
@@ -20,6 +25,11 @@ void circular_buf_init(circular_buf_t *circBuf){
 
 }
 
+/**
+  * @brief  Lecture d'une case du buffer circulaire
+  * @param  circular_buf_t* : le pointeur vers le buffer circulaire
+  * @retval contenu de la case lu dans le buffer circulaire
+  */
 int32_t circular_buf_read_1(circular_buf_t *circBuf){
 	int32_t retVal;
 
@@ -31,6 +41,11 @@ int32_t circular_buf_read_1(circular_buf_t *circBuf){
 	return retVal;
 }
 
+/**
+  * @brief  Lecture de 100 cases du buffer circulaire
+  * @param  circular_buf_t* : le pointeur vers le buffer circulaire
+  * @retval tableau contenant les 100 cases lu dans le buffer circulaire
+  */
 int32_t* circular_buf_read_100(circular_buf_t *circBuf){
 	static int32_t retVal[CIRC_BUFFER_ELMT_SIZE];
 	uint32_t i;
@@ -44,6 +59,12 @@ int32_t* circular_buf_read_100(circular_buf_t *circBuf){
 	return retVal;
 }
 
+/**
+  * @brief  Ecriture d'une case du buffer circulaire
+  * @param  circular_buf_t* : le pointeur vers le buffer circulaire
+  * @param  valToAdd : valeur à écrire dans le buffer circulaire
+  * @retval None
+  */
 void circular_buf_write_1(circular_buf_t *circBuf, int32_t valToAdd){
 	osMutexWait(buffCirc100Sem, osWaitForever);
 	circBuf->buffer_vals[circBuf->writing_head++] = valToAdd;

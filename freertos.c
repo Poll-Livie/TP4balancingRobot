@@ -73,7 +73,6 @@ osThreadId terminalTaskHandle;
 
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void const * argument);
 void asservissementTask(void const * argument);
 void enregistrementTask(void const * argument);
 void terminalTask(void const * argument);
@@ -167,54 +166,6 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
-{
-  /* USER CODE BEGIN StartDefaultTask */
-	uint8_t LSM6DS3_Res = 0;
-	uint8_t tempString[100];
-	int32_t i=0;	// Pour tester
-
-	/* Init des periphs externes */
-	MotorDriver_Init();
-	MESN_UART_Init();
-	if(LSM6DS3_begin(&LSM6DS3_Res) != IMU_SUCCESS){
-		MESN_UART_PutString_Poll((uint8_t*)"\r\nIMU Error !");
-		while(1);
-	}
-
-	/* Test des periphs externes */
-	sprintf((char*)tempString, "\r\nInit done. LSM6DS3 reg = %02x", LSM6DS3_Res);
-	MESN_UART_PutString_Poll(tempString);
-	MotorDriver_Move(200);
-
-	/* Test algo autom */
-	sprintf((char*)tempString, "\r\nAngle = %ldmDeg", autoAlgo_angleObs(50,5));
-	MESN_UART_PutString_Poll(tempString);
-
-	enregistrement_init();		// Initialisation à pas OUBLIER  !!
-
-	while(1){
-		i++;
-		osMessagePut(MsgBox_Angle_Enregistrement, i, 0);
-		enregistrement(2);
-	}
-
-  /* Infinite loop */
-  for(;;)
-  {
-	// MESN_UART_GetString(tempString,osWaitForever);
-	MESN_UART_PutString_Poll((uint8_t*)"On est dans le main start default task");
-	// HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-  }
-  /* USER CODE END StartDefaultTask */
-}
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
@@ -256,33 +207,25 @@ void asservissementTask(void const * argument){
 
 
 void enregistrementTask(void const * argument){
-	uint32_t tick =0;
 
-
-	tick = osKernelSysTick();
 	while(1){
 
 		if (enregistrement()==enr_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur enregistrement");
 		}
-		//osDelayUntil(&tick, 10);
 	}
 }
 
 
 void terminalTask(void const * argument){
-	uint32_t tick =0;
-	tick = osKernelSysTick();
+
 	while(1){
 
 		if (terminal()==term_Error) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur terminal");
 		}
-		//osDelayUntil(&tick, 1);
 	}
 }
-
-
 
 
 

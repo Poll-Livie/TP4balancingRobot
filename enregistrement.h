@@ -17,9 +17,7 @@ typedef enum enr_Error_Status {
 	enr_Error,
 	enr_ok,
 	enr_wait,
-	enr_send,
-	enr_valueAbove25Degrees,
-	enr_valueUnder25Degrees
+	enr_send
 }enr_Error_Status;
 
 
