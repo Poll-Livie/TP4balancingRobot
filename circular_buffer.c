@@ -32,7 +32,7 @@ int32_t circular_buf_read_1(circular_buf_t *circBuf){
 }
 
 int32_t* circular_buf_read_100(circular_buf_t *circBuf){
-	int32_t retVal[CIRC_BUFFER_ELMT_SIZE];
+	static int32_t retVal[CIRC_BUFFER_ELMT_SIZE];
 	uint32_t i;
 	osMutexWait(buffCirc100Sem, osWaitForever);
 	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; ++i) {

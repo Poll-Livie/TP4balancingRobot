@@ -6,12 +6,15 @@
  */
 
 #include "terminal_uart.h"
+#include "strings.h"
 
 /* Private Variable --------------------------------------------------*/
 //static osMessageQDef(streamQ, 1, uint32_t); // Define stream queue
 //static osMessageQId streamQ_ID;
 
-void term_init(void){								// potentiellement pas utile
+uint8_t streamToggleFlag=0;
+
+void term_init(void){
 	/* Create RX queue between RX ISR and task */
 	//streamQ_ID = osMessageCreate(osMessageQ(streamQ), NULL);
 }
@@ -20,33 +23,22 @@ void term_init(void){								// potentiellement pas utile
 term_Error_Status terminal(void){
 	term_mess_receivedTypeDef messReceived;
 	uint8_t i_termIndex=0;
-	uint8_t inchar = 0;
 	term_Error_Status retVal;
+
 
 	// Basicaly this is the os task
 	MESN_UART_PutString_Poll((uint8_t*)"\r\nbalancing robot terminal :~$ ");
-	for (i_termIndex = 0; i_termIndex < TERM_BUFFER_SIZE; ++i_termIndex) {
+	for (i_termIndex = 0; i_termIndex < TERM_BUFFER_SIZE; i_termIndex++) {
 		messReceived.stringReceived[i_termIndex]= '\0';
 	}
 
 	// take input from terminal
-	// TODO FIXME make sure the first character is written again
-	for (i_termIndex = 1; i_termIndex < TERM_BUFFER_SIZE; ++i_termIndex) {
-		do {
-			MESN_UART_GetString(&inchar,10);
-		} while (inchar == '\0');
-		if (inchar == '\n') break;
-		else if (inchar == '\177') {		// si on efface, le curseur du buffer circulaire ne s'incrémente pas
-			if (i_termIndex > 1) {		// et si on efface quand il n'y a rien on ne fait rien
-				i_termIndex--;
-			}
-		}
-		else {
-			messReceived.stringReceived[i_termIndex] = inchar;
+	MESN_UART_GetString(messReceived.stringReceived,osWaitForever);
+	if(messReceived.stringReceived[0]=='\n'){
+		for(int i= 0;i<TERM_BUFFER_SIZE-1;i++){
+			messReceived.stringReceived[i]=messReceived.stringReceived[i+1];
 		}
 	}
-
-	messReceived.stringReceived[0] = ' ';
 
 	switch (commandAnalyser(&messReceived)) {
 		case read:
@@ -58,6 +50,7 @@ term_Error_Status terminal(void){
 			retVal = term_cmd_ok;
 			break;
 		case stream:
+			streamToggleFlag = !streamToggleFlag;
 			termCmdstream();
 			retVal = term_cmd_ok;
 			break;
@@ -76,23 +69,20 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 	// uint8_t messToSend[32];	// messaging buffer
 	term_cmd retVal = error;
 	// TODO make sure to check the whole word, not just the fisrt letter
-	switch (messReceived->stringReceived[1]) {
-		case 'r':
-			retVal =  read;
-			break;
-		case 'd':
-			retVal =  dump;
-			break;
-		case 's':
-			retVal =  stream;		// Ajouter variables pour arrêter ou lancer le stream
-			break;
-		case 'h':
-			retVal =  help;
-			break;
-		default:
-			retVal =  error;
-			break;
+
+	if(!strcmp(messReceived->stringReceived,"read")){
+		retVal =  read;
+	}else if(!strcmp(messReceived->stringReceived,"dump")){
+		retVal =  dump;
+	}else if(!strcmp(messReceived->stringReceived,"stream")){
+		retVal =  stream;		// Ajouter variables pour arrêter ou lancer le stream
+	}else if(!strcmp(messReceived->stringReceived,"help")){
+		retVal =  help;
+	}else{
+		retVal =  error;
 	}
+
+
 	if (retVal == error) {
 		MESN_UART_PutString_Poll(messReceived->stringReceived);
 		MESN_UART_PutString_Poll((uint8_t*)" is not a command");
@@ -102,33 +92,44 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 
 void termCmdread(void){
 	// MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
-	uint8_t messToSend[10];
-	sprintf(messToSend,"%lu",circular_buf_read_1(&bufferIMU));
+	uint8_t messToSend[20];
+	sprintf(messToSend,(uint8_t*)"%ld",circular_buf_read_1(&bufferIMU));
 	MESN_UART_PutString_Poll(messToSend);
 }
 
 void termCmddump(void){
-	int32_t* tab_read;
-	uint8_t messToSend[100];
-	int32_t i=0;
+	int32_t *tab_read;
+	uint8_t messToSend[20];
+	int32_t i=0,j=0;
 	tab_read=circular_buf_read_100(&bufferIMU);
-	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; ++i) {
-		sprintf(messToSend,"%ld\n",tab_read[i]);
-		MESN_UART_PutString_Poll(messToSend);
+
+	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE/10; i++) {
+		for (j = 0; j < CIRC_BUFFER_ELMT_SIZE/10; j++) {
+			sprintf(messToSend,(uint8_t*)"%10ld ",tab_read[i*10+j]);
+			MESN_UART_PutString_Poll(messToSend);
+		}
+		MESN_UART_PutString_Poll((uint8_t*)"\n\r");
 	}
 }
 
 void termCmdstream(void){
 	osEvent evt; // TODO maybe to put inside task ?
 	uint8_t messToSend[100];
+	uint8_t stopChar[2];
 
 	// A mettre dans une boucle infinie
 
-	evt = osMessageGet(MsgBox_Stream, osWaitForever);
+	while (streamToggleFlag != 0 ){
+		evt = osMessageGet(MsgBox_Stream, 1);
+		MESN_UART_GetString(stopChar, 10);
+		if (stopChar[0] == 's' || stopChar[0] == 'q') {
+			streamToggleFlag = !streamToggleFlag;
 
-	sprintf(messToSend,"%ld\n",evt.value.signals);
-	MESN_UART_PutString_Poll(messToSend);
-
+			break;
+		}
+		sprintf(messToSend,(uint8_t*)"%10ld\r",evt.value.signals);
+		MESN_UART_PutString_Poll(messToSend);
+	}
 }
 
 void termCmdHelp(void){  // works
@@ -140,9 +141,9 @@ void termCmdHelp(void){  // works
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne les 100 dernières valeurs mesurées (en milli-Degrés) \n");
 
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t -> stream :");
-	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne en continu, toutes les 10 ms, la dernière valeur mesurée (en milli-Degrés) \n \
-		en effaçant côté terminal la précédente valeur affichée. La sortie du mode stream \n	\
-		s’affectue en appuyant sur la touche <enter> côté terminal \n");
+	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne en continu, toutes les 10 ms, la dernière valeur mesurée (en milli-Degrés) \n\r \
+		en effaçant côté terminal la précédente valeur affichée. La sortie du mode stream \n\r	\
+		s’affectue en appuyant sur la touche <enter> côté terminal ou q ou s \n\r ");
 
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t -> help :");
 	MESN_UART_PutString_Poll((uint8_t*)"\r\n\t\t\t Retourne la liste des commandes supportées par l’application et leur descriptions \n");
