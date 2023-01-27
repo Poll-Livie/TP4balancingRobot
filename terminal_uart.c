@@ -156,7 +156,7 @@ void termCmdstream(void){
 
 			break;
 		}
-		sprintf(messToSend,(uint8_t*)"%10ld\r",evt.value.signals);
+		sprintf(messToSend,(uint8_t*)"%6ld\r",evt.value.signals);
 		MESN_UART_PutString_Poll(messToSend);
 	}
 }
