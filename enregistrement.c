@@ -9,16 +9,28 @@
 
 circular_buf_t bufferIMU;
 
+/**
+  * @brief  Enregistrement initialization
+  * @param  None
+  * @retval None
+  */
 void enregistrement_init(){
 
+	// Initialisation et création du buffer_circulaire
 	circular_buf_init(&bufferIMU);
 }
 
+/**
+  * @brief  Enregistrement des angles observés dans un buffer circulaire
+  * @param  None
+  * @retval enr_Error_Status
+  */
 enr_Error_Status enregistrement(){
 	enr_Error_Status retVal = enr_Error;
 	osEvent evt;
 	int32_t angle;
 
+	// On récupère l'angle venant de la tâche asservissement
 	evt = osMessageGet(MsgBox_Angle_Enregistrement, osWaitForever);
 	if(evt.status == osEventMessage){
 		angle=evt.value.signals;
@@ -31,16 +43,26 @@ enr_Error_Status enregistrement(){
 		verifAngle(angle);
 		// at this point everything worked
 		retVal = enr_ok;
-	}								// Fonctionnement queue vérifié
+	}
 	return retVal;
 }
 
+/**
+  * @brief  Commande Stream : envoie dans une queue de message que le terminal va lire
+  * @param  IMU_Val : angle observé
+  * @retval enr_Error_Status
+  */
 enr_Error_Status envoiComStream(int32_t IMU_Val){
 	enr_Error_Status retVal = enr_Error;
-	osMessagePut(MsgBox_Stream, IMU_Val,0);		// Fonctionnement queue vérifié
+	osMessagePut(MsgBox_Stream, IMU_Val,0);
 	return retVal;
 }
 
+/**
+  * @brief  Vérifie l'angle d'inclinaison du dispositif, et allume une LED si l'angle observé dépasse 25°
+  * @param  IMU_Val : angle observé
+  * @retval enr_Error_Status
+  */
 void verifAngle(int32_t IMU_Val){
 
 	enr_Error_Status retVal = enr_Error;

@@ -11,6 +11,11 @@
 
 // Avant utilisation, bien initialiser le moteur et l'IMU
 
+/**
+  * @brief  Asservissement du moteur : calcul de l'angle observé et calcul de la commande à envoyer
+  * @param  None
+  * @retval asser_Error_Status
+  */
 asser_Error_Status asservissement_moteur(){
 
 	// ATTENTION les variables sont des entiers NON-SIGNES
