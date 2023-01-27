@@ -13,6 +13,7 @@
 #include "mesn_uart.h"
 #include "global_variable.h"
 #include "circular_buffer.h"
+#include "errorStatus.h"
 
 #define TERM_BUFFER_SIZE 32
 
@@ -28,10 +29,6 @@ typedef enum term_cmd {
 	help
 }term_cmd;
 
-typedef enum term_Error_Status {
-	term_Error,
-	term_cmd_ok
-}term_Error_Status;
 
 typedef struct term_mess_receivedTypeDef{
 	uint8_t stringReceived[TERM_BUFFER_SIZE]; 		// character string received (written in terminal)
@@ -44,7 +41,7 @@ typedef struct term_mess_receivedTypeDef{
 /*
  * @brief : Basicaly this is the os task
  */
-term_Error_Status terminal(void);
+MeSN_StatusTypedef terminal(void);
 
 /*
  * @brief : takes the incomming send values from uart, and translates it to the an term_cmd

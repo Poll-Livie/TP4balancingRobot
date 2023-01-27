@@ -148,8 +148,6 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
 
-  // osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
-  // defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
 	osThreadDef(ASSERVISSEMENT, asservissementTask, osPriorityHigh, 0, 256);
 	asservissementTaskHandle = osThreadCreate(osThread(ASSERVISSEMENT), NULL);
@@ -197,7 +195,7 @@ void asservissementTask(void const * argument){
 	tick = osKernelSysTick();
 	while(1){
 
-		if (asservissement_moteur()==asser_Error) {
+		if (asservissement_moteur()==USER_ERROR) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur asservissement");
 
 		}
@@ -210,7 +208,7 @@ void enregistrementTask(void const * argument){
 
 	while(1){
 
-		if (enregistrement()==enr_Error) {
+		if (enregistrement()==USER_ERROR) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur enregistrement");
 		}
 	}
@@ -221,7 +219,7 @@ void terminalTask(void const * argument){
 
 	while(1){
 
-		if (terminal()==term_Error) {
+		if (terminal()==USER_ERROR) {
 			MESN_UART_PutString_Poll((uint8_t*)"erreur terminal");
 		}
 	}

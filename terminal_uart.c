@@ -20,12 +20,12 @@ uint8_t streamToggleFlag=0;
 /**
   * @brief  Terminal : permet de communiquer avec la machine, et de lui passer les commandes read, dump, stream et help
   * @param  None
-  * @retval term_Error_Status
+  * @retval MeSN_StatusTypedef
   */
-term_Error_Status terminal(void){
+MeSN_StatusTypedef terminal(void){
 	term_mess_receivedTypeDef messReceived;
 	uint8_t i_termIndex=0;
-	term_Error_Status retVal;
+	MeSN_StatusTypedef retVal;
 
 
 	// Basicaly this is the os task
@@ -45,26 +45,26 @@ term_Error_Status terminal(void){
 	switch (commandAnalyser(&messReceived)) {
 	case read:
 		termCmdread();
-		retVal = term_cmd_ok;
+		retVal = USER_OK;
 		break;
 	case dump:
 		termCmddump();
-		retVal = term_cmd_ok;
+		retVal = USER_OK;
 		break;
 	case stream:
 		streamToggleFlag = !streamToggleFlag;
 		termCmdstream();
-		retVal = term_cmd_ok;
+		retVal = USER_OK;
 		break;
 	case help:
 		termCmdHelp();
-		retVal = term_cmd_ok;
+		retVal = USER_OK;
 		break;
 	case home:
-		retVal = term_cmd_ok;
+		retVal = USER_OK;
 		break;
 	default:
-		retVal = term_Error;
+		retVal = USER_ERROR;
 		break;
 	}
 	return retVal;
@@ -116,9 +116,9 @@ void termCmdread(void){
 }
 
 /**
- * @brief  Fonction pour lire les 100 dernière valeurs du buffer circulaire, et les afficher sur le terminal sous forme de tableau
- * @param  None
- * @retval None
+ * @brief : Fonction pour lire les 100 dernière valeurs du buffer circulaire, et les afficher sur le terminal sous forme de tableau
+ * @param : None
+ * @retval : None
  */
 void termCmddump(void){
 	int32_t *tab_read;
@@ -141,7 +141,7 @@ void termCmddump(void){
  * @retval None
  */
 void termCmdstream(void){
-	osEvent evt; // TODO maybe to put inside task ?
+	osEvent evt;
 	uint8_t messToSend[100];
 	uint8_t stopChar[2];
 

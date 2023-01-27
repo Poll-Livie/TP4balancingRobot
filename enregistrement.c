@@ -23,10 +23,10 @@ void enregistrement_init(){
 /**
   * @brief  Enregistrement des angles observés dans un buffer circulaire
   * @param  None
-  * @retval enr_Error_Status
+  * @retval MeSN_StatusTypedef
   */
-enr_Error_Status enregistrement(){
-	enr_Error_Status retVal = enr_Error;
+MeSN_StatusTypedef enregistrement(){
+	MeSN_StatusTypedef retVal = USER_ERROR;
 	osEvent evt;
 	int32_t angle;
 
@@ -42,7 +42,7 @@ enr_Error_Status enregistrement(){
 
 		verifAngle(angle);
 		// at this point everything worked
-		retVal = enr_ok;
+		retVal = USER_OK;
 	}
 	return retVal;
 }
@@ -50,10 +50,10 @@ enr_Error_Status enregistrement(){
 /**
   * @brief  Commande Stream : envoie dans une queue de message que le terminal va lire
   * @param  IMU_Val : angle observé
-  * @retval enr_Error_Status
+  * @retval MeSN_StatusTypedef
   */
-enr_Error_Status envoiComStream(int32_t IMU_Val){
-	enr_Error_Status retVal = enr_Error;
+MeSN_StatusTypedef envoiComStream(int32_t IMU_Val){
+	MeSN_StatusTypedef retVal = USER_OK;
 	osMessagePut(MsgBox_Stream, IMU_Val,0);
 	return retVal;
 }
