@@ -6,7 +6,7 @@
  */
 
 #include "terminal_uart.h"
-#include "strings.h"
+#include "string.h"
 
 /* Private Variable --------------------------------------------------*/
 //static osMessageQDef(streamQ, 1, uint32_t); // Define stream queue
@@ -14,12 +14,14 @@
 
 uint8_t streamToggleFlag=0;
 
-void term_init(void){
-	/* Create RX queue between RX ISR and task */
-	//streamQ_ID = osMessageCreate(osMessageQ(streamQ), NULL);
-}
 
 /* Public function definitions Variable ------------------------------*/
+
+/**
+  * @brief  Terminal : permet de communiquer avec la machine, et de lui passer les commandes read, dump, stream et help
+  * @param  None
+  * @retval term_Error_Status
+  */
 term_Error_Status terminal(void){
 	term_mess_receivedTypeDef messReceived;
 	uint8_t i_termIndex=0;
@@ -41,30 +43,39 @@ term_Error_Status terminal(void){
 	}
 
 	switch (commandAnalyser(&messReceived)) {
-		case read:
-			termCmdread();
-			retVal = term_cmd_ok;
-			break;
-		case dump:
-			termCmddump();
-			retVal = term_cmd_ok;
-			break;
-		case stream:
-			streamToggleFlag = !streamToggleFlag;
-			termCmdstream();
-			retVal = term_cmd_ok;
-			break;
-		case help:
-			termCmdHelp();
-			retVal = term_cmd_ok;
-			break;
-		default:
-			retVal = term_Error;
-			break;
+	case read:
+		termCmdread();
+		retVal = term_cmd_ok;
+		break;
+	case dump:
+		termCmddump();
+		retVal = term_cmd_ok;
+		break;
+	case stream:
+		streamToggleFlag = !streamToggleFlag;
+		termCmdstream();
+		retVal = term_cmd_ok;
+		break;
+	case help:
+		termCmdHelp();
+		retVal = term_cmd_ok;
+		break;
+	case home:
+		retVal = term_cmd_ok;
+		break;
+	default:
+		retVal = term_Error;
+		break;
 	}
 	return retVal;
 }
 
+/**
+ * @brief  Permet de communiquer avec la machine, de filtrer la commande reçu et de l'interpréter,
+ * 		   pour lui donner les commandes read, dump, stream et help.
+ * @param  term_mess_receivedTypeDef* : commande envoyée par l'utilisateur
+ * @retval term_cmd : renvoit la commande interprétée
+ */
 term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 	// uint8_t messToSend[32];	// messaging buffer
 	term_cmd retVal = error;
@@ -78,6 +89,8 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 		retVal =  stream;		// Ajouter variables pour arrêter ou lancer le stream
 	}else if(!strcmp(messReceived->stringReceived,"help")){
 		retVal =  help;
+	}else if(!strcmp(messReceived->stringReceived,"")){
+			retVal =  home;
 	}else{
 		retVal =  error;
 	}
@@ -90,6 +103,11 @@ term_cmd commandAnalyser(term_mess_receivedTypeDef *messReceived){
 	return retVal;
 }
 
+/**
+ * @brief  Fonction pour lire la dernière valeur du buffer circulaire, et l'afficher sur le terminal
+ * @param  None
+ * @retval None
+ */
 void termCmdread(void){
 	// MESN_UART_PutString_Poll((uint8_t*)"\r\nfunction not implemented yet");
 	uint8_t messToSend[20];
@@ -97,6 +115,11 @@ void termCmdread(void){
 	MESN_UART_PutString_Poll(messToSend);
 }
 
+/**
+ * @brief  Fonction pour lire les 100 dernière valeurs du buffer circulaire, et les afficher sur le terminal sous forme de tableau
+ * @param  None
+ * @retval None
+ */
 void termCmddump(void){
 	int32_t *tab_read;
 	uint8_t messToSend[20];
@@ -112,6 +135,11 @@ void termCmddump(void){
 	}
 }
 
+/**
+ * @brief  Fonction pour lire toute les 10 ms la dernière valeur du buffer circulaire, et l'afficher sur le terminal
+ * @param  None
+ * @retval None
+ */
 void termCmdstream(void){
 	osEvent evt; // TODO maybe to put inside task ?
 	uint8_t messToSend[100];
@@ -132,6 +160,11 @@ void termCmdstream(void){
 	}
 }
 
+/**
+ * @brief  Fonction pour afficher les commandes disponibles sur le terminal
+ * @param  None
+ * @retval None
+ */
 void termCmdHelp(void){  // works
 	MESN_UART_PutString_Poll((uint8_t*) "\r\nUsable Commands for the time being : \r\n");
 	MESN_UART_PutString_Poll((uint8_t*) "\r\n\t -> read :");

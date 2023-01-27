@@ -61,24 +61,20 @@ enr_Error_Status envoiComStream(int32_t IMU_Val){
 /**
   * @brief  Vérifie l'angle d'inclinaison du dispositif, et allume une LED si l'angle observé dépasse 25°
   * @param  IMU_Val : angle observé
-  * @retval enr_Error_Status
+  * @retval None
   */
 void verifAngle(int32_t IMU_Val){
 
-	enr_Error_Status retVal = enr_Error;
 	static uint32_t counter = 0;
-	int32_t angleObs = 0;
 
-	// angleObs = autoAlgo_angleObs(0, IMU_Val);
+
 	// if IMU val > 25° LED ON
 	if (IMU_Val > 25000 || IMU_Val < -25000) {
-		retVal = enr_valueAbove25Degrees;
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 		counter = 0;
 	}
 	// Else LED OFF
 	else {
-		retVal = enr_valueUnder25Degrees;
 		if (counter >= 0 && counter < 90) {
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 		}
@@ -88,7 +84,6 @@ void verifAngle(int32_t IMU_Val){
 		}
 	}
 	counter++;
-	// return retVal;
 
 }
 
