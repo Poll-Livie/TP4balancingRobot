@@ -35,6 +35,7 @@ int32_t circular_buf_read_1(circular_buf_t *circBuf){
 
 	osMutexWait(buffCirc100Sem, osWaitForever);
 	retVal = circBuf->buffer_vals[circBuf->reading_head++];
+	circBuf->reading_head=circBuf->writing_head;
 	if (circBuf->reading_head == CIRC_BUFFER_ELMT_SIZE)
 			circBuf->reading_head = 0;
 	osMutexRelease(buffCirc100Sem);
@@ -50,6 +51,7 @@ int32_t* circular_buf_read_100(circular_buf_t *circBuf){
 	static int32_t retVal[CIRC_BUFFER_ELMT_SIZE];
 	uint32_t i;
 	osMutexWait(buffCirc100Sem, osWaitForever);
+	circBuf->reading_head=circBuf->writing_head;
 	for (i = 0; i < CIRC_BUFFER_ELMT_SIZE; i++) {
 		retVal[i]= circBuf->buffer_vals[circBuf->reading_head++];
 		if (circBuf->reading_head == CIRC_BUFFER_ELMT_SIZE)

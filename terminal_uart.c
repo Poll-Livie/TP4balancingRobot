@@ -117,6 +117,7 @@ void termCmdread(void){
 
 /**
  * @brief : Fonction pour lire les 100 dernière valeurs du buffer circulaire, et les afficher sur le terminal sous forme de tableau
+ * Nous affichons les valeurs les plus anciennes jusqu'au plus récentes dans le tableau.
  * @param : None
  * @retval : None
  */
@@ -155,7 +156,7 @@ void termCmdstream(void){
 
 			break;
 		}
-		sprintf(messToSend,(uint8_t*)"%10ld\r",evt.value.signals);
+		sprintf(messToSend,(uint8_t*)"%6ld\r",evt.value.signals);
 		MESN_UART_PutString_Poll(messToSend);
 	}
 }
